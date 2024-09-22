@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.example.composeintro.animations.CarouselExamples
 
 @Composable
 fun MainScreen(modifier: Modifier) {
@@ -17,13 +18,14 @@ fun MainScreen(modifier: Modifier) {
             SplashScreen(onTimeout = { showLandingScreen = false })
         } else {
             FlowCollectorUI()
+            CarouselExamples()
             //MessageList(messages = (generateMessages(50)))
             //CounterApp()
             //CounterWithHoisting()
             //CounterApp2()
             //TestStateHolder(StateHolderViewModel())
            // TestStateHolderFix(StateHolderViewModel())
-            Try()
+           // Try()
         }
     }
 }
