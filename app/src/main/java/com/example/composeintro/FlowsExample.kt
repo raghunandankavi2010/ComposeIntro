@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -34,9 +33,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 
 
 @Composable
@@ -94,9 +91,9 @@ class FlowExampleViewModel : ViewModel() {
             trigger.flowWhileShared(
                 subscriptionCount, SharingStarted.WhileSubscribed()
             ).distinctUntilChanged().flatMapLatest {
-                Log.i("Making api call ","Now!")
-                    getDataFromApi()
-                }
+                Log.i("Making api call ", "Now!")
+                getDataFromApi()
+            }
         }
 
 
