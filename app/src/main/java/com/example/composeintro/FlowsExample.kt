@@ -69,6 +69,7 @@ fun FlowCollectorUI(viewModel: FlowExampleViewModel = viewModel()) {
     ) {
         Button(onClick = {
             count = count.inc()
+            viewModel.setTrigger("",TriggerCommands.REFRESH)
         }) {
             Text("Click Me")
         }
@@ -82,16 +83,21 @@ fun FlowCollectorUI(viewModel: FlowExampleViewModel = viewModel()) {
 class FlowExampleViewModel : ViewModel() {
 
     // used a trigger but for now its dummy!
-    val trigger = MutableStateFlow("")
+    private val trigger = MutableStateFlow(Pair("",TriggerCommands.TRIGGER))
+
+    fun setTrigger(value: String, commands: TriggerCommands) {
+         trigger.value = Pair(value,commands)
+    }
 
     // get the data from api fake data for now!
     @OptIn(ExperimentalCoroutinesApi::class)
     val resultData2: StateFlow<UiState<String>> =
         stateFlow(viewModelScope, UiState.Success("")) { subscriptionCount ->
             trigger.flowWhileShared(
-                subscriptionCount, SharingStarted.WhileSubscribed()
-            ).distinctUntilChanged().flatMapLatest {
-                Log.i("Making api call ", "Now!")
+                subscriptionCount, SharingStarted.WhileSubscribed(5_000L)
+            ).distinctUntilChanged()
+                .flatMapLatest { (value,command) ->
+                Log.i("Making api call ", "Now!. Value = $value Command = $command")
                 getDataFromApi()
             }
         }
@@ -116,6 +122,8 @@ class FlowExampleViewModel : ViewModel() {
         }
     }
 }
+
+
 
 fun getFakeApiData(): Flow<String> = flow<String> {
     delay(5000)
@@ -159,4 +167,10 @@ sealed interface UiState<out T> {
     // Success state with some data
     data class Success<out T>(val data: T) : UiState<T>
 
+}
+
+
+enum class TriggerCommands {
+    REFRESH,
+    TRIGGER
 }
